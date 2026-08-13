@@ -53,12 +53,49 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
+  margin: 0;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  background: #fff;
+  color: var(--color-ink-900);
+}
+
+img,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+}
+
+button,
+[role='button'],
+a[href] {
+  min-height: 44px;
 }
 
 .font-display {
@@ -79,6 +116,16 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-ink-500);
+}
+
+@media (max-width: 640px) {
+  html {
+    font-size: 15px;
+  }
+
+  body {
+    min-height: 100vh;
+  }
 }
 
 /* Animations */

@@ -159,16 +159,16 @@ export function CheckoutPage() {
   const errorInputClass = 'border-error-500 focus:border-error-500 focus:ring-error-500';
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
+    <div className="mx-auto max-w-7xl px-3 py-6 sm:px-4 sm:py-8">
       <Link to="/cart" className="mb-4 inline-flex items-center gap-2 text-sm text-ink-500 hover:text-ink-900">
         <ArrowLeft size={16} /> Back to Cart
       </Link>
-      <h1 className="mb-8 font-display text-3xl font-bold text-ink-900">Checkout</h1>
+      <h1 className="mb-6 sm:mb-8 font-display text-3xl font-bold tracking-tight text-ink-900">Checkout</h1>
 
-      <div className="grid gap-8 lg:grid-cols-3">
-        <div className="space-y-8 lg:col-span-2">
+      <div className="grid gap-6 lg:grid-cols-3 lg:gap-8">
+        <div className="space-y-6 lg:col-span-2">
           {/* Customer Info */}
-          <section className="rounded-xl border border-ink-100 p-6">
+          <section className="rounded-xl border border-ink-100 bg-white p-4 sm:p-6">
             <h2 className="mb-4 text-lg font-semibold text-ink-900">Customer Information</h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
@@ -190,7 +190,7 @@ export function CheckoutPage() {
           </section>
 
           {/* Shipping Address */}
-          <section className="rounded-xl border border-ink-100 p-6">
+          <section className="rounded-xl border border-ink-100 bg-white p-4 sm:p-6">
             <h2 className="mb-4 text-lg font-semibold text-ink-900">Delivery Address</h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <div className="sm:col-span-2">
@@ -218,7 +218,7 @@ export function CheckoutPage() {
           </section>
 
           {/* Shipping Method */}
-          <section className="rounded-xl border border-ink-100 p-6">
+          <section className="rounded-xl border border-ink-100 bg-white p-4 sm:p-6">
             <h2 className="mb-4 text-lg font-semibold text-ink-900">Shipping Method</h2>
             <div className="space-y-3">
               {[
@@ -248,7 +248,7 @@ export function CheckoutPage() {
           </section>
 
           {/* Payment */}
-          <section className="rounded-xl border border-ink-100 p-6">
+          <section className="rounded-xl border border-ink-100 bg-white p-4 sm:p-6">
             <h2 className="mb-4 text-lg font-semibold text-ink-900">Payment Method</h2>
             <div className="space-y-3">
               <button

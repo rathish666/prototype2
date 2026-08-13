@@ -71,19 +71,19 @@ export function Navbar() {
       {/* Search overlay */}
       {searchOpen && (
         <div className="fixed inset-0 z-50 bg-white animate-fade-in">
-          <div className="mx-auto max-w-3xl px-4 pt-24">
-            <form onSubmit={handleSearch} className="flex items-center gap-3 border-b-2 border-ink-900 pb-4">
-              <Search size={24} className="text-ink-400" />
+          <div className="mx-auto max-w-3xl px-3 pt-20 sm:px-4 sm:pt-24">
+            <form onSubmit={handleSearch} className="flex items-center gap-3 border-b-2 border-ink-900 pb-3 sm:pb-4">
+              <Search size={22} className="text-ink-400 sm:h-6 sm:w-6" />
               <input
                 autoFocus
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search for products, brands, categories..."
-                className="flex-1 bg-transparent text-lg text-ink-900 outline-none placeholder:text-ink-400"
+                placeholder="Search products..."
+                className="flex-1 bg-transparent text-base text-ink-900 outline-none placeholder:text-ink-400 sm:text-lg"
               />
               <button type="button" onClick={() => setSearchOpen(false)} className="text-ink-400 hover:text-ink-900">
-                <X size={24} />
+                <X size={22} />
               </button>
             </form>
             <div className="mt-6">
@@ -108,21 +108,21 @@ export function Navbar() {
         'sticky top-0 z-40 bg-white transition-all duration-300',
         scrolled ? 'shadow-md' : 'shadow-sm'
       )}>
-        <nav className="mx-auto max-w-7xl px-4">
-          <div className="flex h-16 items-center justify-between gap-4 lg:h-18">
+        <nav className="mx-auto max-w-7xl px-3 sm:px-4">
+          <div className="flex h-16 items-center justify-between gap-2 sm:gap-4 lg:h-18">
             {/* Mobile menu button */}
             <button
-              className="lg:hidden text-ink-900"
+              className="grid h-9 w-9 place-items-center rounded-full text-ink-900 transition-colors hover:bg-ink-100 lg:hidden"
               onClick={() => setMobileOpen(true)}
               aria-label="Open menu"
             >
-              <Menu size={24} />
+              <Menu size={22} />
             </button>
 
             {/* Logo */}
             <Link to="/" className="flex items-center">
-              <span className="font-display text-2xl font-bold tracking-tight text-ink-900">MAISON</span>
-              <span className="ml-1 text-xs font-medium tracking-[0.2em] text-accent-500">CO.</span>
+              <span className="font-display text-lg font-bold tracking-tight text-ink-900 sm:text-2xl">MAISON</span>
+              <span className="ml-1 hidden text-[10px] font-medium tracking-[0.2em] text-accent-500 xs:inline-block sm:inline-block">CO.</span>
             </Link>
 
             {/* Desktop nav */}
@@ -170,17 +170,17 @@ export function Navbar() {
             <div className="flex items-center gap-1 sm:gap-2">
               <button
                 onClick={() => setSearchOpen(true)}
-                className="grid h-10 w-10 place-items-center rounded-full text-ink-700 transition-colors hover:bg-ink-100"
+                className="grid h-9 w-9 place-items-center rounded-full text-ink-700 transition-colors hover:bg-ink-100 sm:h-10 sm:w-10"
                 aria-label="Search"
               >
-                <Search size={20} />
+                <Search size={18} className="sm:h-5 sm:w-5" />
               </button>
               <Link
                 to="/wishlist"
-                className="relative grid h-10 w-10 place-items-center rounded-full text-ink-700 transition-colors hover:bg-ink-100"
+                className="relative grid h-9 w-9 place-items-center rounded-full text-ink-700 transition-colors hover:bg-ink-100 sm:h-10 sm:w-10"
                 aria-label="Wishlist"
               >
-                <Heart size={20} />
+                <Heart size={18} className="sm:h-5 sm:w-5" />
                 {wishlist.length > 0 && (
                   <span className="absolute right-1 top-1 grid h-4 min-w-4 place-items-center rounded-full bg-error-500 px-1 text-[10px] font-bold text-white">
                     {wishlist.length}
@@ -189,10 +189,10 @@ export function Navbar() {
               </Link>
               <Link
                 to="/cart"
-                className="relative grid h-10 w-10 place-items-center rounded-full text-ink-700 transition-colors hover:bg-ink-100"
+                className="relative grid h-9 w-9 place-items-center rounded-full text-ink-700 transition-colors hover:bg-ink-100 sm:h-10 sm:w-10"
                 aria-label="Cart"
               >
-                <ShoppingBag size={20} />
+                <ShoppingBag size={18} className="sm:h-5 sm:w-5" />
                 {cartCount > 0 && (
                   <span className="absolute right-1 top-1 grid h-4 min-w-4 place-items-center rounded-full bg-ink-900 px-1 text-[10px] font-bold text-white">
                     {cartCount}
@@ -201,10 +201,10 @@ export function Navbar() {
               </Link>
               <Link
                 to={customerEmail ? '/account' : '/login'}
-                className="grid h-10 w-10 place-items-center rounded-full text-ink-700 transition-colors hover:bg-ink-100"
+                className="grid h-9 w-9 place-items-center rounded-full text-ink-700 transition-colors hover:bg-ink-100 sm:h-10 sm:w-10"
                 aria-label="Account"
               >
-                <User size={20} />
+                <User size={18} className="sm:h-5 sm:w-5" />
               </Link>
               <Link
                 to="/admin"

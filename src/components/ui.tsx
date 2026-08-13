@@ -80,14 +80,15 @@ export function Button({
 }
 
 export function ColorSwatch({ color, selected, onClick, size = 'md' }: { color: string; selected?: boolean; onClick?: () => void; size?: 'sm' | 'md' }) {
-  const swatchSize = size === 'sm' ? 'w-5 h-5' : 'w-7 h-7';
+  const swatchSize = size === 'sm' ? 'h-5 w-5' : 'h-7 w-7';
   return (
     <button
       type="button"
       onClick={onClick}
       title={color}
       className={cn(
-        'rounded-full border-2 transition-all',
+        'shrink-0 rounded-full border-2 transition-all duration-200',
+        'aspect-square',
         swatchSize,
         selected ? 'border-ink-900 ring-2 ring-ink-900 ring-offset-1' : 'border-ink-200 hover:border-ink-400'
       )}

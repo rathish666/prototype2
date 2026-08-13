@@ -201,14 +201,14 @@ export function ShopPage({ title = 'All Products', categorySlug }: { title?: str
   );
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
+    <div className="mx-auto max-w-7xl px-3 py-6 sm:px-4 sm:py-8">
       {/* Header */}
-      <div className="mb-6">
-        <h1 className="font-display text-3xl font-bold text-ink-900">{title}</h1>
+      <div className="mb-5 sm:mb-6">
+        <h1 className="font-display text-2xl font-bold text-ink-900 sm:text-3xl">{title}</h1>
         <p className="mt-1 text-sm text-ink-500">{filtered.length} products</p>
       </div>
 
-      <div className="flex gap-8">
+      <div className="flex gap-4 sm:gap-8">
         {/* Desktop sidebar */}
         <aside className="hidden w-64 shrink-0 lg:block">
           <div className="sticky top-24">
@@ -219,10 +219,10 @@ export function ShopPage({ title = 'All Products', categorySlug }: { title?: str
         {/* Main */}
         <div className="flex-1">
           {/* Toolbar */}
-          <div className="mb-4 flex items-center justify-between gap-4">
+          <div className="mb-4 flex items-center justify-between gap-2 sm:gap-4">
             <button
               onClick={() => setShowFilters(true)}
-              className="flex items-center gap-2 rounded-lg border border-ink-200 px-4 py-2 text-sm font-medium text-ink-700 lg:hidden"
+              className="flex items-center gap-2 rounded-lg border border-ink-200 px-3 py-2 text-sm font-medium text-ink-700 lg:hidden"
             >
               <SlidersHorizontal size={16} /> Filters {activeFilterCount > 0 && `(${activeFilterCount})`}
             </button>
@@ -230,7 +230,7 @@ export function ShopPage({ title = 'All Products', categorySlug }: { title?: str
               <select
                 value={sort}
                 onChange={(e) => setSort(e.target.value as SortOption)}
-                className="appearance-none rounded-lg border border-ink-200 bg-white py-2 pl-4 pr-10 text-sm font-medium text-ink-700 focus:outline-none focus:ring-1 focus:ring-ink-900"
+                className="appearance-none rounded-lg border border-ink-200 bg-white py-2 pl-3 pr-9 text-xs font-medium text-ink-700 focus:outline-none focus:ring-1 focus:ring-ink-900 sm:pl-4 sm:pr-10 sm:text-sm"
               >
                 <option value="newest">Sort: Newest</option>
                 <option value="price-asc">Price: Low to High</option>
@@ -244,7 +244,7 @@ export function ShopPage({ title = 'All Products', categorySlug }: { title?: str
 
           {/* Grid */}
           {loading ? (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
               {Array.from({ length: 8 }).map((_, i) => <ProductCardSkeleton key={i} />)}
             </div>
           ) : filtered.length === 0 ? (
@@ -254,7 +254,7 @@ export function ShopPage({ title = 'All Products', categorySlug }: { title?: str
               action={<Button variant="outline" onClick={resetFilters}>Clear filters</Button>}
             />
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4">
               {filtered.map((p, i) => <ProductCard key={p.id} product={p} index={i} />)}
             </div>
           )}

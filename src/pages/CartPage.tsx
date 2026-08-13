@@ -66,42 +66,44 @@ export function CartPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8">
-      <h1 className="mb-8 font-display text-3xl font-bold text-ink-900">Shopping Cart</h1>
+    <div className="mx-auto max-w-7xl px-3 py-6 sm:px-4 sm:py-8">
+      <h1 className="mb-6 sm:mb-8 font-display text-3xl font-bold tracking-tight text-ink-900">Shopping Cart</h1>
 
-      <div className="grid gap-8 lg:grid-cols-3">
+      <div className="grid gap-6 lg:grid-cols-3 lg:gap-8">
         {/* Items */}
-        <div className="lg:col-span-2 space-y-4">
+        <div className="space-y-4 lg:col-span-2">
           {cart.map((item) => (
-            <div key={`${item.product_id}-${item.size}-${item.color}`} className="flex gap-4 rounded-xl border border-ink-100 p-4">
-              <Link to={`/product/${item.product_id}`} className="shrink-0">
-                <div className="h-28 w-24 overflow-hidden rounded-lg bg-ink-50">
+            <div key={`${item.product_id}-${item.size}-${item.color}`} className="flex flex-col gap-4 rounded-xl border border-ink-100 bg-white p-3 sm:flex-row sm:p-4">
+              <Link to={`/product/${item.product_id}`} className="shrink-0 self-start">
+                <div className="h-28 w-full overflow-hidden rounded-lg bg-ink-50 sm:h-28 sm:w-24">
                   <img src={item.image} alt={item.name} className="h-full w-full object-cover" />
                 </div>
               </Link>
-              <div className="flex flex-1 flex-col">
-                <div className="flex justify-between">
-                  <div>
-                    <p className="text-xs font-medium uppercase tracking-wide text-ink-400">{item.brand}</p>
-                    <Link to={`/product/${item.product_id}`} className="text-sm font-semibold text-ink-900 hover:text-ink-700">{item.name}</Link>
-                    <div className="mt-1 flex gap-3 text-xs text-ink-500">
+              <div className="flex min-w-0 flex-1 flex-col">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-medium uppercase tracking-[0.18em] text-ink-400">{item.brand}</p>
+                    <Link to={`/product/${item.product_id}`} className="mt-1 block text-sm font-semibold text-ink-900 hover:text-ink-700">{item.name}</Link>
+                    <div className="mt-1 flex flex-wrap gap-2 text-xs text-ink-500">
                       <span>Size: {item.size}</span>
                       <span>Color: {item.color}</span>
                     </div>
                   </div>
                   <p className="text-sm font-bold text-ink-900">{formatPrice(item.price * item.quantity)}</p>
                 </div>
-                <div className="mt-auto flex items-center justify-between pt-3">
+
+                <div className="mt-4 flex flex-col gap-3 pt-3 sm:mt-auto sm:flex-row sm:items-center sm:justify-between">
                   <div className="flex items-center rounded-lg border border-ink-200">
-                    <button onClick={() => updateCartQuantity(item.product_id, item.size, item.color, item.quantity - 1)} className="grid h-8 w-8 place-items-center text-ink-600 hover:text-ink-900 disabled:opacity-30" disabled={item.quantity <= 1}>
+                    <button onClick={() => updateCartQuantity(item.product_id, item.size, item.color, item.quantity - 1)} className="grid h-9 w-9 place-items-center text-ink-600 hover:text-ink-900 disabled:opacity-30" disabled={item.quantity <= 1}>
                       <Minus size={14} />
                     </button>
                     <span className="w-10 text-center text-sm font-semibold">{item.quantity}</span>
-                    <button onClick={() => updateCartQuantity(item.product_id, item.size, item.color, Math.min(item.quantity + 1, item.stock))} className="grid h-8 w-8 place-items-center text-ink-600 hover:text-ink-900 disabled:opacity-30" disabled={item.quantity >= item.stock}>
+                    <button onClick={() => updateCartQuantity(item.product_id, item.size, item.color, Math.min(item.quantity + 1, item.stock))} className="grid h-9 w-9 place-items-center text-ink-600 hover:text-ink-900 disabled:opacity-30" disabled={item.quantity >= item.stock}>
                       <Plus size={14} />
                     </button>
                   </div>
-                  <div className="flex gap-3">
+
+                  <div className="flex flex-wrap gap-3">
                     <button onClick={() => { toggleWishlist(item.product_id); showToast('Moved to wishlist', 'success'); removeFromCart(item.product_id, item.size, item.color); }} className="flex items-center gap-1 text-xs text-ink-500 hover:text-ink-900">
                       <Heart size={14} /> Wishlist
                     </button>
@@ -120,7 +122,7 @@ export function CartPage() {
 
         {/* Summary */}
         <div>
-          <div className="sticky top-24 rounded-xl border border-ink-100 p-6">
+          <div className="sticky top-24 rounded-xl border border-ink-100 bg-white p-4 sm:p-6">
             <h2 className="text-lg font-semibold text-ink-900">Order Summary</h2>
 
             {/* Coupon */}

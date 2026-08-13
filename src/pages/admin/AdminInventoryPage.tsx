@@ -70,18 +70,18 @@ export function AdminInventoryPage() {
     if (!error) fetchData();
   };
 
-  const inputCls = 'w-20 rounded-lg border border-ink-200 px-2 py-1.5 text-sm outline-none focus:border-ink-900';
+  const inputCls = 'w-full max-w-[5.5rem] rounded-lg border border-ink-200 px-2 py-1.5 text-sm outline-none focus:border-ink-900';
 
   return (
     <div>
       <h1 className="mb-6 font-display text-2xl font-bold text-ink-900">Inventory Management</h1>
 
-      <div className="mb-4 flex flex-wrap gap-3">
-        <div className="relative flex-1 min-w-[200px]">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <div className="relative flex-1 min-w-0">
           <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" />
-          <input className="w-full rounded-lg border border-ink-200 py-2 pl-9 pr-3 text-sm outline-none focus:border-ink-900" placeholder="Search products..." value={search} onChange={(e) => setSearch(e.target.value)} />
+          <input className="w-full rounded-lg border border-ink-200 py-2.5 pl-9 pr-3 text-sm outline-none focus:border-ink-900" placeholder="Search products..." value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
-        <select className="rounded-lg border border-ink-200 px-3 py-2 text-sm" value={filter} onChange={(e) => setFilter(e.target.value)}>
+        <select className="w-full rounded-lg border border-ink-200 px-3 py-2.5 text-sm sm:w-auto" value={filter} onChange={(e) => setFilter(e.target.value)}>
           <option value="all">All Products</option>
           <option value="ok">In Stock</option>
           <option value="low">Low Stock</option>
@@ -99,12 +99,12 @@ export function AdminInventoryPage() {
 
             return (
               <div key={product.id} className="overflow-hidden rounded-xl border border-ink-100 bg-white">
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-ink-100 p-4">
+                <div className="flex flex-col gap-3 border-b border-ink-100 p-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <p className="font-medium text-ink-900">{product.name}</p>
                     <p className="text-xs text-ink-500">{product.brand} • {product.sku || 'No SKU'}</p>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                     <span className="text-sm text-ink-600">{variantRows.length ? `${variantRows.length} variant rows` : 'Single SKU'} </span>
                     <span className="text-sm font-semibold text-ink-900">Total stock: {totalStock}</span>
                     <Badge variant={statusVariant(status)}>{status}</Badge>
@@ -154,7 +154,7 @@ export function AdminInventoryPage() {
         </div>
       )}
 
-      <div className="mt-6 grid grid-cols-3 gap-4">
+      <div className="mt-6 grid gap-4 sm:grid-cols-3">
         <div className="rounded-xl border border-amber-100 bg-amber-50 p-5"><AlertTriangle size={20} className="text-amber-600" /><p className="mt-2 text-2xl font-bold text-ink-900">{products.filter((product) => getTotalStock(product) > 0 && getTotalStock(product) <= getMinThreshold(product)).length}</p><p className="text-xs text-ink-500">Low Stock Items</p></div>
         <div className="rounded-xl border border-red-100 bg-red-50 p-5"><PackageX size={20} className="text-red-600" /><p className="mt-2 text-2xl font-bold text-ink-900">{products.filter((product) => getTotalStock(product) === 0).length}</p><p className="text-xs text-ink-500">Out of Stock</p></div>
         <div className="rounded-xl border border-green-100 bg-green-50 p-5"><p className="mt-2 text-2xl font-bold text-ink-900">{products.filter((product) => getTotalStock(product) > getMinThreshold(product)).length}</p><p className="text-xs text-ink-500">Well Stocked</p></div>

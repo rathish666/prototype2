@@ -328,7 +328,7 @@ export function AdminProductEditPage() {
       <h1 className="mb-6 font-display text-2xl font-bold text-ink-900">{isEdit ? 'Edit Product' : 'Add New Product'}</h1>
 
       <div className="max-w-3xl space-y-6">
-        <section className="rounded-xl border border-ink-100 bg-white p-6">
+        <section className="rounded-xl border border-ink-100 bg-white p-4 sm:p-6">
           <h2 className="mb-4 text-lg font-semibold text-ink-900">Basic Information</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <div><label className={labelCls}>Product Name *</label><input className={`${inputCls} ${errors.name ? errCls : ''}`} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />{errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}</div>
@@ -339,7 +339,7 @@ export function AdminProductEditPage() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-ink-100 bg-white p-6">
+        <section className="rounded-xl border border-ink-100 bg-white p-4 sm:p-6">
           <h2 className="mb-4 text-lg font-semibold text-ink-900">Pricing & Inventory</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div><label className={labelCls}>Price (INR) *</label><input type="number" step="0.01" className={`${inputCls} ${errors.price ? errCls : ''}`} value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} />{errors.price && <p className="mt-1 text-xs text-red-500">{errors.price}</p>}</div>
@@ -353,7 +353,7 @@ export function AdminProductEditPage() {
           </div>
         </section>
 
-        <section className="rounded-xl border border-ink-100 bg-white p-6">
+        <section className="rounded-xl border border-ink-100 bg-white p-4 sm:p-6">
           <h2 className="mb-4 text-lg font-semibold text-ink-900">Variants</h2>
           <div className="mb-4">
             <label className={labelCls}>Sizes</label>
@@ -376,7 +376,7 @@ export function AdminProductEditPage() {
         </section>
 
         {variantRows.length > 0 && (
-          <section className="rounded-xl border border-ink-100 bg-white p-6">
+          <section className="rounded-xl border border-ink-100 bg-white p-4 sm:p-6">
             <h2 className="mb-4 text-lg font-semibold text-ink-900">Variant Inventory</h2>
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-ink-200 text-sm">
@@ -405,7 +405,7 @@ export function AdminProductEditPage() {
           </section>
         )}
 
-        <section className="rounded-xl border border-ink-100 bg-white p-6">
+        <section className="rounded-xl border border-ink-100 bg-white p-4 sm:p-6">
           <h2 className="mb-4 text-lg font-semibold text-ink-900">Product Images</h2>
           <div className="space-y-3">
             {images.map((image, i) => (

@@ -93,7 +93,7 @@ export function AdminLayout() {
     <div className="flex min-h-screen bg-ink-50">
       {/* Sidebar */}
       <aside className={cn(
-        'fixed inset-y-0 left-0 z-50 w-64 bg-ink-950 text-ink-300 transition-transform duration-300 lg:translate-x-0',
+        'fixed inset-y-0 left-0 z-50 w-[82vw] max-w-72 bg-ink-950 text-ink-300 transition-transform duration-300 sm:w-64 lg:translate-x-0',
         sidebarOpen ? 'translate-x-0' : '-translate-x-full'
       )}>
         <div className="flex h-16 items-center justify-between border-b border-ink-800 px-5">
@@ -140,19 +140,19 @@ export function AdminLayout() {
       {/* Main */}
       <div className="flex-1 lg:pl-64">
         {/* Top bar */}
-        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-ink-100 bg-white px-4 lg:px-8">
-          <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-ink-700"><Menu size={24} /></button>
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-ink-100 bg-white px-3 sm:px-4 lg:px-8">
+          <button onClick={() => setSidebarOpen(true)} className="grid h-9 w-9 place-items-center rounded-full text-ink-700 transition-colors hover:bg-ink-100 lg:hidden"><Menu size={22} /></button>
           <div className="hidden flex-1 lg:block" />
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <div className="relative hidden sm:block">
               <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-400" />
-              <input className="w-48 rounded-lg border border-ink-200 py-2 pl-9 pr-3 text-sm outline-none focus:border-ink-900" placeholder="Search..." />
+              <input className="w-36 rounded-lg border border-ink-200 py-2 pl-9 pr-3 text-sm outline-none focus:border-ink-900 sm:w-48" placeholder="Search..." />
             </div>
-            <div className="grid h-9 w-9 place-items-center rounded-full bg-ink-900 text-sm font-bold text-white">A</div>
+            <div className="grid h-8 w-8 place-items-center rounded-full bg-ink-900 text-xs font-bold text-white sm:h-9 sm:w-9">A</div>
           </div>
         </header>
 
-        <main className="p-4 lg:p-8">
+        <main className="p-3 sm:p-4 lg:p-8">
           <Outlet />
         </main>
       </div>
