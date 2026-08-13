@@ -104,32 +104,31 @@ Deno.serve(async (req) => {
   // Same atomic compare-and-set as razorpay-verify-payment: whichever path
   // (browser callback or this webhook) gets here first "wins" and is the
   // only one that runs stock decrement + WhatsApp.
-  const { data: order, error } = await supabase
+  const { data: claimedOrder, error } = await supabase
     .from("orders")
-    .update({ payment_status: "paid", status: "Confirmed", razorpay_payment_id: payment.id })
+    .update({ payment_status: "processing" })
     .eq("razorpay_order_id", razorpayOrderId)
-    .neq("payment_status", "paid")
-    .select("*")
+    .in("payment_status", ["pending", "cod_pending"])
+    .select("id, order_number, customer_name, phone, total, address, city")
     .maybeSingle();
 
   if (error) {
-    console.error("Webhook: update failed for", razorpayOrderId, error);
-    return new Response("error", { status: 200 }); // 200 so Razorpay doesn't retry forever on our bug
+    console.error("Webhook: claim failed for", razorpayOrderId, error);
+    return new Response("error", { status: 200 });
   }
-  if (!order) {
-    // Already marked paid by the browser callback, or unknown order — either way, nothing to do.
+  if (!claimedOrder) {
     return new Response("ok", { status: 200 });
   }
 
-  await supabase.rpc("decrement_stock_for_order", { p_order_id: order.id });
-  await supabase.from("orders").update({ stock_decremented: true }).eq("id", order.id);
+  await supabase.rpc("decrement_stock_for_order", { p_order_id: claimedOrder.id });
+  await supabase.from("orders").update({ payment_status: "paid", status: "Confirmed", razorpay_payment_id: payment.id, stock_decremented: true }).eq("id", claimedOrder.id);
 
-  const { data: items } = await supabase.from("order_items").select("*").eq("order_id", order.id);
+  const { data: items } = await supabase.from("order_items").select("*").eq("order_id", claimedOrder.id);
   try {
-    await sendWhatsAppAlert(order, items || []);
-    await supabase.from("orders").update({ whatsapp_sent: true }).eq("id", order.id);
+    await sendWhatsAppAlert(claimedOrder, items || []);
+    await supabase.from("orders").update({ whatsapp_sent: true }).eq("id", claimedOrder.id);
   } catch (waErr) {
-    await supabase.from("orders").update({ whatsapp_error: String(waErr) }).eq("id", order.id);
+    await supabase.from("orders").update({ whatsapp_error: String(waErr) }).eq("id", claimedOrder.id);
     console.error("WhatsApp send failed:", waErr);
   }
 

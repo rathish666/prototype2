@@ -68,36 +68,56 @@ Deno.serve(async (req) => {
 
     // ---- fetch REAL prices/stock from the database ----
     const productIds = [...new Set(items.map((i: any) => i.product_id))];
-    const { data: products, error: productErr } = await supabase
-      .from("products")
-      .select("id, name, brand, price, discount_price, stock")
-      .in("id", productIds);
+    const [{ data: products, error: productErr }, { data: variants, error: variantErr }] = await Promise.all([
+      supabase.from("products").select("id, name, brand, price, discount_price").in("id", productIds),
+      supabase.from("product_variants").select("id, product_id, size, color, stock, low_stock_threshold, sku").in("product_id", productIds),
+    ]);
     if (productErr) throw productErr;
+    if (variantErr) throw variantErr;
 
     const productMap = new Map((products || []).map((p: any) => [p.id, p]));
-    const qtyByProduct = new Map<string, number>();
+    const variantMap = new Map((variants || []).map((v: any) => [`${v.product_id}||${v.size}||${v.color}`, v]));
+    const variantById = new Map((variants || []).map((v: any) => [v.id, v]));
+
+    const qtyByVariant = new Map<string, number>();
     for (const it of items) {
-      qtyByProduct.set(it.product_id, (qtyByProduct.get(it.product_id) || 0) + it.qty);
+      const key = it.variant_id ? it.variant_id : `${it.product_id}||${it.size || ''}||${it.color || ''}`;
+      qtyByVariant.set(key, (qtyByVariant.get(key) || 0) + it.qty);
     }
 
     let subtotal = 0;
     const verifiedItems = items.map((it: any) => {
       const product = productMap.get(it.product_id);
       if (!product) throw new Error("One or more products no longer exist");
-      const totalQtyForProduct = qtyByProduct.get(it.product_id)!;
-      if (product.stock < totalQtyForProduct) {
-        throw new Error(`"${product.name}" doesn't have enough stock`);
+
+      const variant = it.variant_id
+        ? variantById.get(it.variant_id)
+        : variantMap.get(`${it.product_id}||${it.size || ''}||${it.color || ''}`);
+      if (!variant) {
+        throw new Error(`Variant not found for ${it.size ?? 'default'} / ${it.color ?? 'default'}`);
       }
+
+      const aggregatedQty = it.variant_id
+        ? qtyByVariant.get(it.variant_id)
+        : qtyByVariant.get(`${it.product_id}||${it.size || ''}||${it.color || ''}`);
+      if (aggregatedQty == null) {
+        throw new Error('Could not aggregate variant quantities');
+      }
+      if (variant.stock < aggregatedQty) {
+        throw new Error(`"${product.name}" ${variant.size} / ${variant.color} doesn't have enough stock`);
+      }
+
       const unitPrice = product.discount_price && product.discount_price < product.price
         ? Number(product.discount_price)
         : Number(product.price);
       subtotal += unitPrice * it.qty;
       return {
         product_id: product.id,
+        variant_id: variant.id,
         product_name: product.name,
         brand: product.brand,
-        size: it.size ?? null,
-        color: it.color ?? null,
+        size: variant.size,
+        color: variant.color,
         quantity: it.qty,
         price: unitPrice,
       };

@@ -7,6 +7,18 @@ export interface Category {
   created_at: string;
 }
 
+export interface ProductVariant {
+  id: string;
+  product_id: string;
+  size: string;
+  color: string;
+  sku: string | null;
+  stock: number;
+  low_stock_threshold: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -28,6 +40,7 @@ export interface Product {
   created_at: string;
   images?: ProductImage[];
   category?: Category | null;
+  variants?: ProductVariant[];
 }
 
 export interface ProductImage {
@@ -91,6 +104,7 @@ export interface OrderItem {
   id: string;
   order_id: string;
   product_id: string | null;
+  variant_id?: string | null;
   product_name: string;
   product_image: string | null;
   brand: string | null;
@@ -152,6 +166,7 @@ export interface WishlistItem {
 
 export interface CartItem {
   product_id: string;
+  variant_id?: string | null;
   name: string;
   brand: string;
   image: string;

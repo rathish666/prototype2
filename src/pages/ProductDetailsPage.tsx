@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Heart, ShoppingBag, Truck, RotateCcw, ShieldCheck, Minus, Plus, ChevronRight, Ruler } from 'lucide-react';
 import { useProduct, useProducts } from '@/lib/hooks';
 import { useStore } from '@/store/StoreContext';
-import { supabase } from '@/lib/supabase';
+import { supabase, resolveProductImageUrl } from '@/lib/supabase';
 import { Button, Rating, Badge, ColorSwatch, SizeChip, Spinner, EmptyState } from '@/components/ui';
 import { ProductCard } from '@/components/ProductCard';
 import { formatPrice, discountPercent, effectivePrice, type Review, type Product } from '@/types';
@@ -24,8 +24,9 @@ export function ProductDetailsPage() {
 
   useEffect(() => {
     if (product) {
-      setSelectedSize(product.sizes[0] || '');
-      setSelectedColor(product.colors[0] || '');
+      const firstVariant = product.variants?.[0];
+      setSelectedSize(firstVariant?.size ?? product.sizes[0] ?? '');
+      setSelectedColor(firstVariant?.color ?? product.colors[0] ?? '');
       setSelectedImage(0);
       setQuantity(1);
     }
@@ -48,16 +49,19 @@ export function ProductDetailsPage() {
   if (!product) return <EmptyState title="Product not found" description="This product may have been removed." action={<Link to="/shop"><Button>Back to Shop</Button></Link>} />;
 
   const inWishlist = isInWishlist(product.id);
+  const selectedVariant = product.variants?.find((v) => v.size === selectedSize && v.color === selectedColor);
+  const variantStock = selectedVariant?.stock ?? product.stock;
+  const variantLowStockThreshold = selectedVariant?.low_stock_threshold ?? product.low_stock_threshold;
   const discount = discountPercent(product.price, product.discount_price);
   const price = effectivePrice(product);
-  const outOfStock = product.stock === 0;
-  const lowStock = product.stock > 0 && product.stock <= product.low_stock_threshold;
+  const outOfStock = variantStock === 0;
+  const lowStock = variantStock > 0 && variantStock <= variantLowStockThreshold;
 
   const handleAddToCart = () => {
     if (outOfStock) return;
     if (!selectedSize) { showToast('Please select a size', 'error'); return; }
     if (!selectedColor) { showToast('Please select a color', 'error'); return; }
-    addToCart(product, selectedSize, selectedColor, quantity);
+    addToCart(product, selectedSize, selectedColor, quantity, selectedVariant?.id, variantStock);
     showToast('Added to cart', 'success');
   };
 
@@ -65,7 +69,7 @@ export function ProductDetailsPage() {
     if (outOfStock) return;
     if (!selectedSize) { showToast('Please select a size', 'error'); return; }
     if (!selectedColor) { showToast('Please select a color', 'error'); return; }
-    addToCart(product, selectedSize, selectedColor, quantity);
+    addToCart(product, selectedSize, selectedColor, quantity, selectedVariant?.id, variantStock);
     window.location.href = '/cart';
   };
 
@@ -93,7 +97,7 @@ export function ProductDetailsPage() {
         <div>
           <div className="relative overflow-hidden rounded-xl bg-ink-50">
             <div className="aspect-[3/4]">
-              <img src={product.images?.[selectedImage]?.url} alt={product.name} className="h-full w-full object-cover" />
+              <img src={resolveProductImageUrl(product.images?.[selectedImage]?.url) || undefined} alt={product.name} className="h-full w-full object-cover" />
             </div>
             {discount > 0 && (
               <div className="absolute left-4 top-4"><Badge variant="error">-{discount}% OFF</Badge></div>
@@ -113,7 +117,7 @@ export function ProductDetailsPage() {
                     i === selectedImage ? 'border-ink-900' : 'border-transparent hover:border-ink-300'
                   )}
                 >
-                  <img src={img.url} alt="" className="h-full w-full object-cover" />
+                  <img src={resolveProductImageUrl(img.url) || undefined} alt="" className="h-full w-full object-cover" />
                 </button>
               ))}
             </div>
@@ -140,7 +144,7 @@ export function ProductDetailsPage() {
           {/* Stock */}
           <div className="mt-3">
             {outOfStock ? <Badge variant="error">Out of Stock</Badge>
-              : lowStock ? <Badge variant="warning">Only {product.stock} left in stock</Badge>
+              : lowStock ? <Badge variant="warning">Only {variantStock} left in stock</Badge>
               : <Badge variant="success">In Stock</Badge>}
           </div>
 
@@ -187,14 +191,14 @@ export function ProductDetailsPage() {
                 </button>
                 <span className="w-12 text-center text-sm font-semibold">{quantity}</span>
                 <button
-                  onClick={() => setQuantity((q) => Math.min(product.stock, q + 1))}
+                  onClick={() => setQuantity((q) => Math.min(variantStock, q + 1))}
                   className="grid h-10 w-10 place-items-center text-ink-600 hover:text-ink-900 disabled:opacity-30"
-                  disabled={quantity >= product.stock || outOfStock}
+                  disabled={quantity >= variantStock || outOfStock}
                 >
                   <Plus size={16} />
                 </button>
               </div>
-              {lowStock && <span className="text-xs text-warning-600">Only {product.stock} available</span>}
+              {lowStock && <span className="text-xs text-warning-600">Only {variantStock} available</span>}
             </div>
           </div>
 

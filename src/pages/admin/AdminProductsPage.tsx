@@ -6,6 +6,7 @@ import { Button, Badge, Spinner, EmptyState } from '@/components/ui';
 import { formatPrice, effectivePrice, type Product, type Category } from '@/types';
 import { statusVariant } from '@/lib/utils';
 import { cn } from '@/lib/utils';
+import { resolveProductImageUrl } from '@/lib/supabase';
 
 export function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -89,7 +90,7 @@ export function AdminProductsPage() {
                   <td className="p-4">
                     <div className="flex items-center gap-3">
                       <div className="h-12 w-10 shrink-0 overflow-hidden rounded-lg bg-ink-50">
-                        {p.images?.[0]?.url && <img src={p.images[0].url} alt="" className="h-full w-full object-cover" />}
+                        {p.images?.[0]?.url && <img src={resolveProductImageUrl(p.images[0].url) || undefined} alt="" className="h-full w-full object-cover" />}
                       </div>
                       <div><p className="font-medium text-ink-900 line-clamp-1">{p.name}</p><p className="text-xs text-ink-500">{p.brand} · {p.sku}</p></div>
                     </div>

@@ -105,17 +105,16 @@ Deno.serve(async (req) => {
     // webhook, whichever arrives first) will actually flip payment_status.
     // If a row comes back, this call "owns" the follow-up actions below —
     // stock and WhatsApp can never double-fire, even under a race.
-    const { data: order, error: updateError } = await supabase
+    const { data: claimedOrder, error: claimError } = await supabase
       .from("orders")
-      .update({ payment_status: "paid", status: "Confirmed", razorpay_payment_id, razorpay_signature })
+      .update({ payment_status: "processing" })
       .eq("razorpay_order_id", razorpay_order_id)
-      .neq("payment_status", "paid")
-      .select("*")
+      .in("payment_status", ["pending", "cod_pending"])
+      .select("id, order_number, customer_name, phone, total, address, city")
       .maybeSingle();
-    if (updateError) throw updateError;
+    if (claimError) throw claimError;
 
-    if (!order) {
-      // Either already processed by the webhook, or the order_id is unknown.
+    if (!claimedOrder) {
       const { data: existing } = await supabase.from("orders").select("order_number, payment_status").eq("razorpay_order_id", razorpay_order_id).maybeSingle();
       if (!existing) throw new Error("Order not found");
       return new Response(JSON.stringify({ success: true, orderNumber: existing.order_number }), {
@@ -123,18 +122,18 @@ Deno.serve(async (req) => {
       });
     }
 
-    await supabase.rpc("decrement_stock_for_order", { p_order_id: order.id });
-    await supabase.from("orders").update({ stock_decremented: true }).eq("id", order.id);
+    await supabase.rpc("decrement_stock_for_order", { p_order_id: claimedOrder.id });
+    await supabase.from("orders").update({ payment_status: "paid", status: "Confirmed", razorpay_payment_id, razorpay_signature, stock_decremented: true }).eq("id", claimedOrder.id);
 
-    const { data: items } = await supabase.from("order_items").select("*").eq("order_id", order.id);
+    const { data: items } = await supabase.from("order_items").select("*").eq("order_id", claimedOrder.id);
     try {
-      await sendWhatsAppAlert(order, items || []);
-      await supabase.from("orders").update({ whatsapp_sent: true }).eq("id", order.id);
+      await sendWhatsAppAlert(claimedOrder, items || []);
+      await supabase.from("orders").update({ whatsapp_sent: true }).eq("id", claimedOrder.id);
     } catch (waErr) {
-      await supabase.from("orders").update({ whatsapp_sent: false, whatsapp_error: String(waErr) }).eq("id", order.id);
+      await supabase.from("orders").update({ whatsapp_sent: false, whatsapp_error: String(waErr) }).eq("id", claimedOrder.id);
     }
 
-    return new Response(JSON.stringify({ success: true, orderNumber: order.order_number }), {
+    return new Response(JSON.stringify({ success: true, orderNumber: claimedOrder.order_number }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {

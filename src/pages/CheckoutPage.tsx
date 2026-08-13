@@ -73,6 +73,7 @@ export function CheckoutPage() {
     },
     items: cart.map((item) => ({
       product_id: item.product_id,
+      variant_id: item.variant_id,
       size: item.size,
       color: item.color,
       qty: item.quantity,

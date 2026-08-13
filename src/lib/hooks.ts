@@ -21,7 +21,8 @@ export function useProducts(options?: {
       .select(`
         *,
         images:product_images(*),
-        category:categories(*)
+        category:categories(*),
+        variants:product_variants(*)
       `);
 
     if (options?.category) {
@@ -59,7 +60,8 @@ export function useProduct(id: string | undefined) {
         .select(`
           *,
           images:product_images(*),
-          category:categories(*)
+          category:categories(*),
+          variants:product_variants(*)
         `)
         .eq('id', id)
         .maybeSingle();

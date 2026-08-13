@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, useCallback, type ReactNode } from 'react';
 import type { CartItem, Product } from '@/types';
 import { effectivePrice } from '@/types';
+import { resolveProductImageUrl } from '@/lib/supabase';
 
 export interface Toast {
   id: string;
@@ -11,7 +12,7 @@ export interface Toast {
 interface StoreContextValue {
   // Cart
   cart: CartItem[];
-  addToCart: (product: Product, size: string, color: string, quantity?: number) => void;
+  addToCart: (product: Product, size: string, color: string, quantity?: number, variantId?: string, stock?: number) => void;
   removeFromCart: (productId: string, size: string, color: string) => void;
   updateCartQuantity: (productId: string, size: string, color: string, quantity: number) => void;
   clearCart: () => void;
@@ -88,28 +89,29 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(CART_KEY, JSON.stringify(c));
   };
 
-  const addToCart = useCallback((product: Product, size: string, color: string, quantity = 1) => {
+  const addToCart = useCallback((product: Product, size: string, color: string, quantity = 1, variantId?: string, stock = product.stock) => {
     setCart((prev) => {
       const existing = prev.find(
         (i) => i.product_id === product.id && i.size === size && i.color === color
       );
       let next: CartItem[];
       if (existing) {
-        const newQty = Math.min(existing.quantity + quantity, product.stock);
+        const newQty = Math.min(existing.quantity + quantity, existing.stock);
         next = prev.map((i) =>
           i === existing ? { ...i, quantity: newQty } : i
         );
       } else {
         next = [...prev, {
           product_id: product.id,
+          variant_id: variantId ?? null,
           name: product.name,
           brand: product.brand,
-          image: product.images?.[0]?.url ?? '',
+          image: resolveProductImageUrl(product.images?.[0]?.url) || '',
           price: effectivePrice(product),
           size,
           color,
-          quantity: Math.min(quantity, product.stock),
-          stock: product.stock,
+          quantity: Math.min(quantity, stock),
+          stock,
         }];
       }
       localStorage.setItem(CART_KEY, JSON.stringify(next));
