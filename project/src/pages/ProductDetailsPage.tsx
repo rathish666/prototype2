@@ -80,16 +80,16 @@ export function ProductDetailsPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8">
       {/* Breadcrumb */}
-      <nav className="mb-6 flex items-center gap-2 text-sm text-ink-500">
-        <Link to="/" className="hover:text-ink-900">Home</Link>
-        <ChevronRight size={14} />
-        <Link to="/shop" className="hover:text-ink-900">Shop</Link>
+      <nav className="mb-6 flex flex-wrap items-center gap-2 text-sm text-ink-500">
+        <Link to="/" className="inline-flex items-center hover:text-ink-900">Home</Link>
+        <ChevronRight size={14} className="shrink-0" />
+        <Link to="/shop" className="inline-flex items-center hover:text-ink-900">Shop</Link>
         {product.category && <>
-          <ChevronRight size={14} />
-          <Link to={`/category/${product.category.slug}`} className="hover:text-ink-900">{product.category.name}</Link>
+          <ChevronRight size={14} className="shrink-0" />
+          <Link to={`/category/${product.category.slug}`} className="inline-flex items-center hover:text-ink-900">{product.category.name}</Link>
         </>}
-        <ChevronRight size={14} />
-        <span className="text-ink-900">{product.name}</span>
+        <ChevronRight size={14} className="shrink-0" />
+        <span className="inline-flex items-center text-ink-900">{product.name}</span>
       </nav>
 
       <div className="grid gap-8 lg:grid-cols-2 lg:gap-12">

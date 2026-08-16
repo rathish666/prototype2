@@ -125,15 +125,15 @@ export function Footer() {
             <ul className="mt-4 space-y-3 text-sm">
               <li className="flex items-start gap-2">
                 <MapPin size={16} className="mt-0.5 shrink-0 text-accent-500" />
-                <span>123 Fashion Ave, New York, NY 10001</span>
+                <span>123 fashion ,nort street, villupram ,tamin nadu ,india</span>
               </li>
               <li className="flex items-center gap-2">
                 <Phone size={16} className="shrink-0 text-accent-500" />
-                <span>+1 (555) 010-0000</span>
+                <span>+91 9003279815</span>
               </li>
               <li className="flex items-center gap-2">
                 <Mail size={16} className="shrink-0 text-accent-500" />
-                <span>support@maisonco.com</span>
+                <span>srathish575@gmail.com</span>
               </li>
             </ul>
           </div>

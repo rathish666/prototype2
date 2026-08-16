@@ -120,13 +120,13 @@ export function Navbar() {
             </button>
 
             {/* Logo */}
-            <Link to="/" className="flex items-center">
+            <Link to="/" className="flex flex-shrink-0 items-center">
               <span className="font-display text-lg font-bold tracking-tight text-ink-900 sm:text-2xl">MAISON</span>
               <span className="ml-1 hidden text-[10px] font-medium tracking-[0.2em] text-accent-500 xs:inline-block sm:inline-block">CO.</span>
             </Link>
 
             {/* Desktop nav */}
-            <div className="hidden items-center gap-8 lg:flex">
+            <div className="hidden flex-1 items-center justify-center gap-8 lg:flex">
               {navLinks.map((link) => (
                 <div
                   key={link.to}
@@ -136,10 +136,10 @@ export function Navbar() {
                 >
                   <Link
                     to={link.to}
-                    className="flex items-center gap-0.5 text-sm font-medium leading-none text-ink-700 transition-colors hover:text-ink-900"
+                    className="inline-flex items-center gap-1 text-sm font-medium leading-snug text-ink-700 transition-colors hover:text-ink-900"
                   >
                     {link.label}
-                    {link.hasMenu && <ChevronDown size={14} className="mt-0.5" />}
+                    {link.hasMenu && <ChevronDown size={14} className="shrink-0" />}
                   </Link>
                   {link.hasMenu && shopMenuOpen && (
                     <div className="absolute left-0 top-full pt-4">

@@ -26,9 +26,7 @@ supabase secrets set RAZORPAY_KEY_SECRET=your_test_key_secret
 # later, after adding webhook in Razorpay:
 supabase secrets set RAZORPAY_WEBHOOK_SECRET=webhook_secret_from_razorpay
 
-## 3. WhatsApp Cloud API (Meta) account
-1. Create a Meta Business Account: https://business.facebook.com
-2. https://developers.facebook.com → create an App → add the **WhatsApp** product
+ \
 3. WhatsApp → API Setup gives you a **test phone number** + **temporary token** (24hr). For
    production: create a System User in Business Settings → generate a **permanent token** with
    `whatsapp_business_messaging` permission, and add your own verified business number.
